@@ -1,33 +1,41 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerInputController : MonoBehaviour
 {
-    private IMover _moverInterface;
-    private IForcer _forcerInterface;
+    public event Action<Vector3> OnMove;
+    public event Action<Vector3,ForceMode> OnJump;
+    private IJumpState _jumpStateInterface;
+    private IMoveState _moveStateInterface;
+    
 
-    private void Start()
+    public void SetJumpStateInterface(IJumpState jumpStateInterface)
     {
-        _moverInterface = gameObject.GetComponent<IMover>();
-        _forcerInterface = gameObject.GetComponent<IForcer>();
-        if (_moverInterface == null)
-        {
-            Debug.LogWarning("PlayerInputController: No IMover found");
-        }
+        _jumpStateInterface = jumpStateInterface;
     }
     
     public void Move(InputAction.CallbackContext context)
     {
-        var dir = context.ReadValue<Vector2>();
-        var dir3 =new Vector3(dir.x, 0, dir.y); 
-        _moverInterface.SetVelocity(dir3);
+        if (context.started)
+        {
+            _moveStateInterface.StartMove();
+            var dir = context.ReadValue<Vector2>();
+            var dir3 =new Vector3(dir.x, 0, dir.y); 
+            OnMove?.Invoke(dir3);
+        }
+        else if (context.canceled)
+        {
+            _moveStateInterface.EndMove();
+        }
     }
+    
 
     public void Jump(InputAction.CallbackContext context)
     {
-        if (context.started)
+        if (context.started&&!_jumpStateInterface.IsJumping)
         {
-            _forcerInterface.SetAddForce(new Vector3(0, 4, 0), ForceMode.Impulse);
+            OnJump?.Invoke(new Vector3(0,4,0),ForceMode.Impulse);
         }
     }
     

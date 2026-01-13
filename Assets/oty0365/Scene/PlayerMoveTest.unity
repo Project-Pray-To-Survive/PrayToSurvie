@@ -136,8 +136,11 @@ GameObject:
   - component: {fileID: 252249138}
   - component: {fileID: 252249145}
   - component: {fileID: 252249146}
+  - component: {fileID: 252249147}
+  - component: {fileID: 252249149}
+  - component: {fileID: 252249148}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -366,53 +369,47 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c840da6785f66a94a9f9e797f74fd1e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerGroundChecker
---- !u!1 &553502630
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 553502632}
-  - component: {fileID: 553502631}
-  m_Layer: 0
-  m_Name: GameObject
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &553502631
+--- !u!114 &252249147
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 553502630}
+  m_GameObject: {fileID: 252249137}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a82a24ba28248f64581fe95dbf4374f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerBehavior
+--- !u!114 &252249148
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 252249137}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6fbe5364b25b7644c94a53c1e64e5705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerConnector
+  playerGroundChecker: {fileID: 252249146}
+  playerInputController: {fileID: 252249138}
+  mouseController: {fileID: 252249149}
+  playerMoveController: {fileID: 252249145}
+--- !u!114 &252249149
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 252249137}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d986bf965b4f84e4f91131c794e5449e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MouseController
-  playerCamera: {fileID: 951494770}
-  player: {fileID: 252249137}
   mouseSensitivity: 100
---- !u!4 &553502632
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 553502630}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.19118, y: -0.74298, z: -6.88344}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &951494768
 GameObject:
   m_ObjectHideFlags: 0
@@ -563,7 +560,7 @@ GameObject:
   - component: {fileID: 1435987054}
   - component: {fileID: 1435987053}
   m_Layer: 0
-  m_Name: Cube (1)
+  m_Name: LeftArm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -675,7 +672,7 @@ GameObject:
   - component: {fileID: 1524611913}
   - component: {fileID: 1524611912}
   m_Layer: 6
-  m_Name: Cube (1)
+  m_Name: Ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -914,7 +911,7 @@ GameObject:
   - component: {fileID: 1708764370}
   - component: {fileID: 1708764369}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: RightArm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1072,5 +1069,4 @@ SceneRoots:
   m_Roots:
   - {fileID: 1560588466}
   - {fileID: 252249143}
-  - {fileID: 553502632}
   - {fileID: 1524611915}

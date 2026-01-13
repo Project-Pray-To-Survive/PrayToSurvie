@@ -21,6 +21,11 @@ public class PlayerMoveController : MonoBehaviour,IMover,IForcer
         rb.linearVelocity = moveDir;
     }
 
+    public void UpdateVelocity()
+    {
+        SetVelocity(new Vector3(1,0,0));
+    }
+
     public void SetAddForce(Vector3 force,ForceMode mode)
     {
         rb.AddForce(force,ForceMode.Impulse);

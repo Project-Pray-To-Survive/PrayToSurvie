@@ -3,23 +3,22 @@ using UnityEngine;
 
 public class PlayerGroundChecker : MonoBehaviour
 {
-    public event Action onGroundEnter;
-    public event Action onGroundExit;
+    public event Action OnGroundEnter;
+    public event Action OnGroundExit;
+    
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("On");
         if (other.gameObject.layer == LayerMask.NameToLayer("Ground"))
         {
-            onGroundEnter?.Invoke();
+            OnGroundEnter?.Invoke();
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        Debug.Log("Off");
         if (other.gameObject.layer == LayerMask.NameToLayer("Ground"))
         {
-            onGroundExit?.Invoke();
+            OnGroundExit?.Invoke();
         }
     }
 }

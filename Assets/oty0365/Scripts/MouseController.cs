@@ -1,22 +1,36 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class MouseController : MonoBehaviour
 {
-    public Camera playerCamera;
-    public GameObject player;
-    public float mouseSensitivity = 100f;
+    public event Action OnMouseMove;
     
-    private float cameraPitch = 0f;
-    private float cameraYaw = 0f;
+    [SerializeField] private float mouseSensitivity = 100f;
+    private Camera _playerCamera;
+    private GameObject _player;
     
-    void Start()
+    private float _cameraPitch = 0f;
+    private float _cameraYaw = 0f;
+    private Vector2 _prevMouseData = Vector2.zero;
+    
+    private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
+
+    public void SetCamera(Camera playerCamera)
+    {
+        _playerCamera = playerCamera;
+    }
+
+    public void SetPlayer(GameObject player)
+    {
+        _player = player;
+    }
     
-    void Update()
+    private void Update()
     {
         if (Keyboard.current.escapeKey.wasPressedThisFrame)
         {
@@ -33,15 +47,21 @@ public class MouseController : MonoBehaviour
         if (Cursor.lockState == CursorLockMode.Locked)
         {
             Vector2 mouseDelta = Mouse.current.delta.ReadValue();
+
+            if (mouseDelta != _prevMouseData)
+            {
+                OnMouseMove?.Invoke();
+                _prevMouseData = mouseDelta;
+            }
             
             float mouseX = mouseDelta.x * mouseSensitivity * Time.deltaTime;
             float mouseY = mouseDelta.y * mouseSensitivity * Time.deltaTime;
             
-            cameraPitch -= mouseY;
-            cameraPitch = Mathf.Clamp(cameraPitch, -90f, 90f);
-            cameraYaw += mouseX;
-            playerCamera.transform.localRotation = Quaternion.Euler(cameraPitch,0, 0);
-            player.transform.rotation = Quaternion.Euler(0, cameraYaw, 0);
+            _cameraPitch -= mouseY;
+            _cameraPitch = Mathf.Clamp(_cameraPitch, -90f, 90f);
+            _cameraYaw += mouseX;
+            _playerCamera.transform.localRotation = Quaternion.Euler(_cameraPitch,0, 0);
+            _player.transform.rotation = Quaternion.Euler(0, _cameraYaw, 0);
         }
     }
 }
