@@ -2,12 +2,12 @@ using System.Collections.Generic;
 
 public class InputQueue
 {
-    private Queue<IBehavior> _queue = new Queue<IBehavior>();
-    public void Enqueue(IBehavior behavior)
+    private Queue<NetWorkMessage> _queue = new Queue<NetWorkMessage>();
+    public void Enqueue(NetWorkMessage data)
     {
-        _queue.Enqueue(behavior);
+        _queue.Enqueue(data);
     }
-    public IBehavior Dequeue()
+    public NetWorkMessage Dequeue()
     {
         return _queue.Dequeue();
     }
