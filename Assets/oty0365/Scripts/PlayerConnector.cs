@@ -1,13 +1,17 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class PlayerConnector : MonoBehaviour, IConnector
 {
     [Header("Controllers")]
-    [SerializeField] private PlayerGroundChecker playerGroundChecker;
-    [SerializeField] private PlayerInputController playerInputController;
     [SerializeField] private MouseController mouseController;
-    [SerializeField] private PlayerMoveController playerMoveController;
     [SerializeField] private PlayerInteractionController playerInteractionController;
+    [SerializeField] private PlayerGroundChecker playerGroundChecker;
+    
+
+    private PlayerInputController _playerInputController;
+    private PlayerMoveController _playerMoveController;
+    private PlayerStatus _playerStatus;
 
     private IJumpState _jumpStateInterface;
     private IMover _moverInterface;
@@ -15,26 +19,32 @@ public class PlayerConnector : MonoBehaviour, IConnector
 
     private void Start()
     {
+        _playerStatus = GetComponent<PlayerStatus>();
+        _playerMoveController = GetComponent<PlayerMoveController>();
+        _playerInputController = GetComponent<PlayerInputController>();
+        
         _jumpStateInterface = GetComponent<IJumpState>();
         _moverInterface = GetComponent<IMover>();
         _forcerInterface = GetComponent<IForcer>();
         
         if (!ValidateReferences()) return;
         
+        _playerMoveController.GetStatus(_playerStatus);
         mouseController.SetCamera(Camera.main);
         mouseController.SetPlayer(gameObject);
-        playerInputController.SetJumpStateInterface(_jumpStateInterface);
-
+        _playerInputController.SetJumpStateInterface(_jumpStateInterface);
         OnConnect();
+        
     }
 
     private bool ValidateReferences()
     {
         if (playerGroundChecker == null) { Debug.LogError("PlayerGroundChecker missing!"); return false; }
-        if (playerInputController == null) { Debug.LogError("PlayerInputController missing!"); return false; }
+        if (_playerInputController == null) { Debug.LogError("PlayerInputController missing!"); return false; }
         if (mouseController == null) { Debug.LogError("MouseController missing!"); return false; }
-        if (playerMoveController == null) { Debug.LogError("PlayerMoveController missing!"); return false; }
+        if (_playerMoveController == null) { Debug.LogError("PlayerMoveController missing!"); return false; }
         if(playerInteractionController == null) { Debug.LogError("PlayerInteractionController missing!"); return false; }
+        if(_playerStatus == null) { Debug.LogError("PlayerStatus missing!"); return false; }
         
         if (_jumpStateInterface == null) { Debug.LogError("IJumpState missing on this GameObject!"); return false; }
         if (_moverInterface == null) { Debug.LogError("IMover missing on this GameObject!"); return false; }
@@ -47,10 +57,10 @@ public class PlayerConnector : MonoBehaviour, IConnector
     {
         playerGroundChecker.OnGroundEnter += _jumpStateInterface.EndJump;
         playerGroundChecker.OnGroundExit += _jumpStateInterface.StartJump;
-        playerInputController.OnInteract += playerInteractionController.StartInteraction;
-        playerInputController.OnMove += _moverInterface.SetVelocity;
-        playerInputController.OnJump += _forcerInterface.SetAddForce;
-        mouseController.OnMouseMove += playerInputController.UpdateMoveWhileDirChange;
+        _playerInputController.OnInteract += playerInteractionController.StartInteraction;
+        _playerInputController.OnMove += _moverInterface.SetVelocity;
+        _playerInputController.OnJump += _forcerInterface.SetAddForce;
+        mouseController.OnMouseMove += _playerInputController.UpdateMoveWhileDirChange;
     }
 
     public void OnDisconnect()
@@ -61,25 +71,25 @@ public class PlayerConnector : MonoBehaviour, IConnector
             playerGroundChecker.OnGroundExit -= _jumpStateInterface.StartJump;
         }
 
-        if (playerInputController != null)
+        if (_playerInputController != null)
         {
             if (_moverInterface != null)
-                playerInputController.OnMove -= _moverInterface.SetVelocity;
+                _playerInputController.OnMove -= _moverInterface.SetVelocity;
             
             if (_forcerInterface != null)
-                playerInputController.OnJump -= _forcerInterface.SetAddForce;
+                _playerInputController.OnJump -= _forcerInterface.SetAddForce;
         }
 
-        if (playerInputController != null)
+        if (_playerInputController != null)
         {
             if (mouseController != null)
             {
-                mouseController.OnMouseMove -= playerInputController.UpdateMoveWhileDirChange;
+                mouseController.OnMouseMove -= _playerInputController.UpdateMoveWhileDirChange;
             }
 
             if (playerInteractionController != null)
             {
-                playerInputController.OnInteract -= playerInteractionController.StartInteraction;
+                _playerInputController.OnInteract -= playerInteractionController.StartInteraction;
             }
         }
     }
