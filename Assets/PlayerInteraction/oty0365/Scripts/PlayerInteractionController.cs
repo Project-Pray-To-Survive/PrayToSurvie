@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerInteractionController : MonoBehaviour
 {
+    public event Action<bool> OnButtonSet;
     [Header("Properties")] 
     [SerializeField] private float interactionRange;
     [SerializeField] private float checkInterval;
@@ -11,6 +12,7 @@ public class PlayerInteractionController : MonoBehaviour
     private Coroutine _checkInteractionCoroutine;
     private IPassiveInteractable _passiveInteractable;
     private IActiveInteractable _activeInteractable;
+    
     
 
     private IEnumerator CheckInteraction()
@@ -30,18 +32,25 @@ public class PlayerInteractionController : MonoBehaviour
             if (curActiveInteractable == null)
             {
                 _activeInteractable = null;
+                OnButtonSet?.Invoke(false);
+                
             }
-            else if (_activeInteractable != curActiveInteractable)
+            else
             {
-                if (_activeInteractable != null)
+                OnButtonSet?.Invoke(true);
+                if (_activeInteractable != curActiveInteractable)
                 {
-                    _activeInteractable.OnActiveInteractExit -= StopInteraction;
-                }
+                    if (_activeInteractable != null)
+                    {
+                        _activeInteractable.OnActiveInteractExit -= StopInteraction;
+                    }
 
-                _activeInteractable = curActiveInteractable;
-                if (_activeInteractable != null)
-                {
-                    _activeInteractable.OnActiveInteractExit += StopInteraction;
+                    _activeInteractable = curActiveInteractable;
+                
+                    if (_activeInteractable != null)
+                    {
+                        _activeInteractable.OnActiveInteractExit += StopInteraction;
+                    }
                 }
             }
 
@@ -51,7 +60,9 @@ public class PlayerInteractionController : MonoBehaviour
 
     public void StartInteraction()
     {
+        
         if (_activeInteractable == null) return;
+        OnButtonSet?.Invoke(false);
         if (_checkInteractionCoroutine != null)
         {
             StopCoroutine(_checkInteractionCoroutine);
@@ -64,8 +75,10 @@ public class PlayerInteractionController : MonoBehaviour
     {
         if (_checkInteractionCoroutine != null)
         {
-           _checkInteractionCoroutine = StartCoroutine(CheckInteraction());
+            StopCoroutine(_checkInteractionCoroutine);
         }
+        OnButtonSet?.Invoke(true);
+        _checkInteractionCoroutine = StartCoroutine(CheckInteraction());
     }
 
     private void Start()

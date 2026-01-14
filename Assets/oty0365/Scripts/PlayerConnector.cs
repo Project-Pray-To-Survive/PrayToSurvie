@@ -46,7 +46,6 @@ public class PlayerConnector : MonoBehaviour, IConnector
     public void OnConnect()
     {
         playerGroundChecker.OnGroundEnter += _jumpStateInterface.EndJump;
-        playerGroundChecker.OnGroundEnter += playerMoveController.SetOnGround;
         playerGroundChecker.OnGroundExit += _jumpStateInterface.StartJump;
         playerInputController.OnInteract += playerInteractionController.StartInteraction;
         playerInputController.OnMove += _moverInterface.SetVelocity;
@@ -60,11 +59,6 @@ public class PlayerConnector : MonoBehaviour, IConnector
         {
             playerGroundChecker.OnGroundEnter -= _jumpStateInterface.EndJump;
             playerGroundChecker.OnGroundExit -= _jumpStateInterface.StartJump;
-        }
-
-        if (playerInputController != null)
-        {
-            playerGroundChecker.OnGroundEnter -= playerMoveController.SetOnGround;
         }
 
         if (playerInputController != null)
