@@ -7,6 +7,7 @@ public class PlayerInputController : MonoBehaviour
 {
     public event Action<Vector3> OnMove;
     public event Action<Vector3,ForceMode> OnJump;
+    public event Action OnInteract;
     private IJumpState _jumpStateInterface;
     private Vector3 _moveDirection;
     
@@ -35,6 +36,14 @@ public class PlayerInputController : MonoBehaviour
         if (context.started&&!_jumpStateInterface.IsJumping)
         {
             OnJump?.Invoke(Vector3.up,ForceMode.Impulse);
+        }
+    }
+
+    public void Interact(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            OnInteract?.Invoke();
         }
     }
     
