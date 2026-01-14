@@ -7,6 +7,7 @@ public class PlayerConnector : MonoBehaviour, IConnector
     [SerializeField] private PlayerInputController playerInputController;
     [SerializeField] private MouseController mouseController;
     [SerializeField] private PlayerMoveController playerMoveController;
+    [SerializeField] private PlayerInteractionController playerInteractionController;
 
     private IJumpState _jumpStateInterface;
     private IMover _moverInterface;
@@ -33,6 +34,7 @@ public class PlayerConnector : MonoBehaviour, IConnector
         if (playerInputController == null) { Debug.LogError("PlayerInputController missing!"); return false; }
         if (mouseController == null) { Debug.LogError("MouseController missing!"); return false; }
         if (playerMoveController == null) { Debug.LogError("PlayerMoveController missing!"); return false; }
+        if(playerInteractionController == null) { Debug.LogError("PlayerInteractionController missing!"); return false; }
         
         if (_jumpStateInterface == null) { Debug.LogError("IJumpState missing on this GameObject!"); return false; }
         if (_moverInterface == null) { Debug.LogError("IMover missing on this GameObject!"); return false; }
@@ -44,8 +46,8 @@ public class PlayerConnector : MonoBehaviour, IConnector
     public void OnConnect()
     {
         playerGroundChecker.OnGroundEnter += _jumpStateInterface.EndJump;
-        playerGroundChecker.OnGroundEnter += playerMoveController.SetOnGround;
         playerGroundChecker.OnGroundExit += _jumpStateInterface.StartJump;
+        playerInputController.OnInteract += playerInteractionController.StartInteraction;
         playerInputController.OnMove += _moverInterface.SetVelocity;
         playerInputController.OnJump += _forcerInterface.SetAddForce;
         mouseController.OnMouseMove += playerInputController.UpdateMoveWhileDirChange;
@@ -61,11 +63,6 @@ public class PlayerConnector : MonoBehaviour, IConnector
 
         if (playerInputController != null)
         {
-            playerGroundChecker.OnGroundEnter -= playerMoveController.SetOnGround;
-        }
-
-        if (playerInputController != null)
-        {
             if (_moverInterface != null)
                 playerInputController.OnMove -= _moverInterface.SetVelocity;
             
@@ -73,9 +70,17 @@ public class PlayerConnector : MonoBehaviour, IConnector
                 playerInputController.OnJump -= _forcerInterface.SetAddForce;
         }
 
-        if (mouseController != null && playerInputController != null)
+        if (playerInputController != null)
         {
-            mouseController.OnMouseMove -= playerInputController.UpdateMoveWhileDirChange;
+            if (mouseController != null)
+            {
+                mouseController.OnMouseMove -= playerInputController.UpdateMoveWhileDirChange;
+            }
+
+            if (playerInteractionController != null)
+            {
+                playerInputController.OnInteract -= playerInteractionController.StartInteraction;
+            }
         }
     }
 
