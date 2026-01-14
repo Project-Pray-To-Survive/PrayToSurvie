@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -7,7 +8,7 @@ public class PlayerInputController : MonoBehaviour
     public event Action<Vector3> OnMove;
     public event Action<Vector3,ForceMode> OnJump;
     private IJumpState _jumpStateInterface;
-    private IMoveState _moveStateInterface;
+    private Vector3 _moveDirection;
     
 
     public void SetJumpStateInterface(IJumpState jumpStateInterface)
@@ -17,17 +18,15 @@ public class PlayerInputController : MonoBehaviour
     
     public void Move(InputAction.CallbackContext context)
     {
-        if (context.started)
-        {
-            _moveStateInterface.StartMove();
-            var dir = context.ReadValue<Vector2>();
-            var dir3 =new Vector3(dir.x, 0, dir.y); 
-            OnMove?.Invoke(dir3);
-        }
-        else if (context.canceled)
-        {
-            _moveStateInterface.EndMove();
-        }
+        var dir = context.ReadValue<Vector2>();
+        var dir3 =new Vector3(dir.x, 0, dir.y); 
+        OnMove?.Invoke(dir3);
+        _moveDirection = dir3;
+    }
+
+    public void UpdateMoveWhileDirChange()
+    {
+        OnMove?.Invoke(_moveDirection);
     }
     
 
@@ -35,7 +34,7 @@ public class PlayerInputController : MonoBehaviour
     {
         if (context.started&&!_jumpStateInterface.IsJumping)
         {
-            OnJump?.Invoke(new Vector3(0,4,0),ForceMode.Impulse);
+            OnJump?.Invoke(Vector3.up,ForceMode.Impulse);
         }
     }
     

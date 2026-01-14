@@ -357,6 +357,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMoveController
   rb: {fileID: 252249144}
+  moveSpeed: 2
+  jumpForce: 4
 --- !u!114 &252249146
 MonoBehaviour:
   m_ObjectHideFlags: 0
