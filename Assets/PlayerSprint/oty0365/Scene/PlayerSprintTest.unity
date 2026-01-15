@@ -273,6 +273,7 @@ GameObject:
   - component: {fileID: 252249138}
   - component: {fileID: 252249145}
   - component: {fileID: 252249149}
+  - component: {fileID: 252249151}
   - component: {fileID: 252249147}
   - component: {fileID: 252249150}
   - component: {fileID: 252249148}
@@ -368,6 +369,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 9affd52c-1d48-48e0-b9b7-ffabd2876591
     m_ActionName: 'Player/Interact[/Keyboard/e]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 252249138}
+        m_TargetAssemblyTypeName: PlayerInputController, Assembly-CSharp
+        m_MethodName: Sprint
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: f0b3a628-e46a-49ad-a7e0-a3c692f59348
+    m_ActionName: 'Player/Sprint[/Keyboard/leftShift]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -561,6 +578,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerStatus
   initialData: {fileID: 11400000, guid: f4db5353b1a8638418bab86645442340, type: 2}
+--- !u!114 &252249151
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 252249137}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10d975b6a3f1d6045b98448394403770, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerActionController
 --- !u!1 &325471179
 GameObject:
   m_ObjectHideFlags: 0
@@ -1308,6 +1337,50 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0.0384}
   m_SizeDelta: {x: 0.4005, y: 0.2383}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1164871072
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1164871074}
+  - component: {fileID: 1164871073}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1164871073
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1164871072}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbf4547ee871f5748a86aa6ac9377dcb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CoroutineManager
+--- !u!4 &1164871074
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1164871072}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1336.3741, y: 430.36383, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1181111303
 GameObject:
   m_ObjectHideFlags: 0
@@ -1994,3 +2067,4 @@ SceneRoots:
   - {fileID: 1181111306}
   - {fileID: 1013334114}
   - {fileID: 77894554}
+  - {fileID: 1164871074}

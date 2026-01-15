@@ -7,6 +7,7 @@ public class PlayerMoveController : MonoBehaviour,IMover,IForcer
     [SerializeField] private Rigidbody rb;
     private PlayerStatus _playerStatus;
     
+    
     public void SetPosition(Vector3 pos)
     {
         rb.position = pos;
@@ -26,6 +27,7 @@ public class PlayerMoveController : MonoBehaviour,IMover,IForcer
         Vector3 finalVelocity = new Vector3(horizontalVelocity.x, currentYVelocity, horizontalVelocity.z);
     
         rb.linearVelocity = finalVelocity;
+        
     }
 
     public void SetOnGround()
