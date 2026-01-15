@@ -1,11 +1,12 @@
 using System;
 using UnityEngine;
 
-public class GrabItem : MonoBehaviour, IActiveInteractable, IPassiveInteractable
+public class GrabableItem : ItemObject, IActiveInteractable, IPassiveInteractable
 {
-    [SerializeField] private Vector3 grabOffset = new Vector3(0, 0, 1.5f);
+    [SerializeField] private Vector3 grabOffset = new(0, 0, 1.5f);
+    [SerializeField] private GameObject player;
     private Transform _holdPosition;
-    private bool _isGrabbed = false;
+    private bool _isGrabbed;
     private Rigidbody _rigidbody;
 
     public event Action OnActiveInteractExit;
@@ -29,24 +30,19 @@ public class GrabItem : MonoBehaviour, IActiveInteractable, IPassiveInteractable
 
     private void Grab()
     {
-        var player = GameObject.FindWithTag("Player");
-        if (player != null)
+        if (player == null) return;
+        _holdPosition = player.transform;
+        _isGrabbed = true;
+        if (_rigidbody != null)
         {
-            // 플레이어 카메라를 기준으로 약간 앞쪽에 들고 있도록 설정
-            _holdPosition = Camera.main.transform;
-            
-            _isGrabbed = true;
-            if (_rigidbody != null)
-            {
-                _rigidbody.isKinematic = true;
-                _rigidbody.useGravity = false;
-            }
-
-            // 들고 다닐 때의 오프셋 설정
-            transform.SetParent(_holdPosition);
-            transform.localPosition = grabOffset;
-            transform.localRotation = Quaternion.identity;
+            _rigidbody.isKinematic = true;
+            _rigidbody.useGravity = false;
         }
+
+        // 들고 다닐 때의 오프셋 설정
+        transform.SetParent(_holdPosition);
+        transform.localPosition = grabOffset;
+        transform.localRotation = Quaternion.identity;
     }
 
     private void Drop()

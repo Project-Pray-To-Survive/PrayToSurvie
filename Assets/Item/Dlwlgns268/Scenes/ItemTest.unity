@@ -277,8 +277,7 @@ GameObject:
   - component: {fileID: 252249147}
   - component: {fileID: 252249150}
   - component: {fileID: 252249148}
-  - component: {fileID: 252249152}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -565,7 +564,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d986bf965b4f84e4f91131c794e5449e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MouseController
-  mouseSensitivity: 100
+  mouseSensitivity: 40
 --- !u!114 &252249150
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -591,19 +590,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10d975b6a3f1d6045b98448394403770, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerActionController
---- !u!114 &252249152
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 252249137}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 72abfda07d01a834597b805d4edbbf09, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GrabItem
-  grabOffset: {x: 0, y: 0, z: 1.5}
 --- !u!1 &325471179
 GameObject:
   m_ObjectHideFlags: 0
@@ -767,6 +753,7 @@ GameObject:
   - component: {fileID: 762687797}
   - component: {fileID: 762687796}
   - component: {fileID: 762687800}
+  - component: {fileID: 762687801}
   m_Layer: 0
   m_Name: TestItem
   m_TagString: Untagged
@@ -787,9 +774,9 @@ BoxCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -861,7 +848,7 @@ Transform:
   m_GameObject: {fileID: 762687795}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.03, y: -0.41, z: 1.55}
+  m_LocalPosition: {x: -0.03, y: -0.24, z: 1.55}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -880,6 +867,34 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TestItem
   grabOffset: {x: 0, y: -0.3, z: 0.7}
+  player: {fileID: 252249137}
+--- !u!54 &762687801
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 762687795}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &860009505
 GameObject:
   m_ObjectHideFlags: 0
@@ -1032,7 +1047,7 @@ GameObject:
   - component: {fileID: 951494769}
   - component: {fileID: 951494772}
   - component: {fileID: 951494773}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Main Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
@@ -1761,7 +1776,7 @@ GameObject:
   - component: {fileID: 1730567817}
   - component: {fileID: 1730567818}
   - component: {fileID: 1730567819}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Foot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
