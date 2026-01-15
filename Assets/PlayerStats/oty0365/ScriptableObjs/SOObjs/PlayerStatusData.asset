@@ -18,3 +18,4 @@ MonoBehaviour:
   maxStamina: 100
   staminaDecreaseSpeed: 50
   staminaFillSpeed: 15
+  staminaRegenRate: 50
