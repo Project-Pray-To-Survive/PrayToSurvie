@@ -1004,6 +1004,55 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerStaminaUI
   slider: {fileID: 899880508}
+--- !u!1 &914021320
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 914021322}
+  - component: {fileID: 914021321}
+  m_Layer: 0
+  m_Name: PlayerCameraVolume
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &914021321
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 914021320}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.Core.Runtime::UnityEngine.Rendering.Volume
+  m_IsGlobal: 1
+  priority: 0
+  blendDistance: 0
+  weight: 1
+  sharedProfile: {fileID: 11400000, guid: b57ee94784b6f634cbecbd86caf3a702, type: 2}
+--- !u!4 &914021322
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 914021320}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1269.9441, y: 358.36063, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &951494768
 GameObject:
   m_ObjectHideFlags: 0
@@ -1017,8 +1066,6 @@ GameObject:
   - component: {fileID: 951494769}
   - component: {fileID: 951494772}
   - component: {fileID: 951494773}
-  - component: {fileID: 951494774}
-  - component: {fileID: 951494775}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1158,47 +1205,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInteraction
   interactionRange: 10
   checkInterval: 0.01
---- !u!114 &951494774
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 951494768}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 921f0f74d8fa32d4181b24f5b9819f9f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerEyeCamera
-  shakeX:
-    min: 0.5
-    max: 1.5
-  shakeY:
-    min: 0.5
-    max: 1.5
-  shakeZ:
-    min: 0.2
-    max: 0.8
-  startSpeed: 2
-  waitTime: 1.5
-  endSpeed: 0.2
---- !u!114 &951494775
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 951494768}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.RenderPipelines.Core.Runtime::UnityEngine.Rendering.Volume
-  m_IsGlobal: 1
-  priority: 0
-  blendDistance: 0
-  weight: 0
-  sharedProfile: {fileID: 11400000, guid: b57ee94784b6f634cbecbd86caf3a702, type: 2}
 --- !u!1 &1013334111
 GameObject:
   m_ObjectHideFlags: 0
@@ -1879,7 +1885,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: -0.354, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.591}
   m_AnchorMax: {x: 0.5, y: 0.591}
-  m_AnchoredPosition: {x: 0.000022888184, y: -0.7000122}
+  m_AnchoredPosition: {x: 0.000022888184, y: -0.69999695}
   m_SizeDelta: {x: 318.3875, y: 110.9786}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1960503588
@@ -2111,3 +2117,4 @@ SceneRoots:
   - {fileID: 1013334114}
   - {fileID: 77894554}
   - {fileID: 1164871074}
+  - {fileID: 914021322}
