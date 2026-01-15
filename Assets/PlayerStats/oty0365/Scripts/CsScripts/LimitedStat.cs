@@ -7,6 +7,7 @@ public class LimitedStat<T> where T : IEquatable<T>, IComparable<T>
 
     private T _value;
     private T _maxValue;
+    private T _minValue;
 
     public LimitedStat(T initialValue, T max)
     {
@@ -24,6 +25,11 @@ public class LimitedStat<T> where T : IEquatable<T>, IComparable<T>
             if (nextValue.CompareTo(_maxValue) > 0)
             {
                 nextValue = _maxValue;
+            }
+
+            if (nextValue.CompareTo(_minValue) < 0)
+            {
+                nextValue = _minValue;
             }
 
             if (EqualityComparer<T>.Default.Equals(_value, nextValue)) return;
@@ -46,6 +52,21 @@ public class LimitedStat<T> where T : IEquatable<T>, IComparable<T>
             }
 
             OnValueChange?.Invoke(_value, _maxValue);
+        }
+    }
+
+    public T MinValue
+    {
+        get => _minValue;
+        set
+        {
+            if (EqualityComparer<T>.Default.Equals(_minValue, value)) return;
+            _minValue = value;
+            if (_value.CompareTo(_minValue) < 0)
+            {
+                _value = _minValue;
+            }
+            OnValueChange?.Invoke(_value, _minValue);
         }
     }
 }
