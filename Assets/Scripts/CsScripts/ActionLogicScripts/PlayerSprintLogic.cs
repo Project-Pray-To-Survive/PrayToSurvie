@@ -9,6 +9,7 @@ public class PlayerSprintLogic
     public event Action OnSprintEnd;
     private readonly PlayerStatus _playerStatus;
     private Coroutine _currentSprintCoroutine;
+    private bool _isTiered = false;
 
     public PlayerSprintLogic(PlayerStatus playerStatus)
     {
@@ -19,7 +20,7 @@ public class PlayerSprintLogic
     {
         if (input)
         {
-            if(_playerStatus.stamina.Value <= _playerStatus.staminaRegenRate.Value/100*_playerStatus.stamina.MaxValue) return;
+            if(_isTiered) return;
             if (_currentSprintCoroutine != null) return;
             _currentSprintCoroutine = CoroutineManager.Instance.StartRoutine(SprintFlow());
         }
@@ -51,10 +52,21 @@ public class PlayerSprintLogic
             _playerStatus.stamina.Value-=_playerStatus.BaseStaminaDecreaseSpeed*Time.deltaTime;
             yield return null;
         }
+        CoroutineManager.Instance.StartRoutine(TieredFlow());
         _playerStatus.moveSpeed.Value = _playerStatus.BaseMoveSpeed;
         OnSprintEnd?.Invoke();
         OnMoveSpeedUpdate?.Invoke();
         _currentSprintCoroutine = null;
+    }
+
+    private IEnumerator TieredFlow()
+    {
+        _isTiered = true;
+        while (_playerStatus.stamina.Value < (_playerStatus.staminaRegenRate.Value / 100 * _playerStatus.stamina.MaxValue))
+        {
+            yield return null;
+        }
+        _isTiered = false;
     }
     
 }
