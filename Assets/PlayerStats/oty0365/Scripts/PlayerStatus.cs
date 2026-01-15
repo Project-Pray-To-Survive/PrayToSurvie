@@ -20,5 +20,6 @@ public class PlayerStatus:MonoBehaviour
         jumpSpeed.Value = data.jumpSpeed;
         stamina.MaxValue = data.maxStamina;
         stamina.Value = stamina.MaxValue;
+        stamina.MinValue = 0;
     }
 }

@@ -8,6 +8,7 @@ public class PlayerInputController : MonoBehaviour
     public event Action<Vector3> OnMove;
     public event Action<Vector3,ForceMode> OnJump;
     public event Action OnInteract;
+    public event Action<bool> OnSprint;
     private IJumpState _jumpStateInterface;
     private Vector3 _moveDirection;
     
@@ -36,6 +37,18 @@ public class PlayerInputController : MonoBehaviour
         if (context.started&&!_jumpStateInterface.IsJumping)
         {
             OnJump?.Invoke(Vector3.up,ForceMode.Impulse);
+        }
+    }
+
+    public void Sprint(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            OnSprint?.Invoke(true);
+        }
+        else if (context.canceled)
+        {
+            OnSprint?.Invoke(false);
         }
     }
 
