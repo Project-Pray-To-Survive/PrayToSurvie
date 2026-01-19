@@ -865,6 +865,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: feebe9bfcfd09974aad55155e0c301ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TestItem
+  grabOffset: {x: 0, y: 0, z: 1.5}
+  player: {fileID: 0}
 --- !u!1 &860009505
 GameObject:
   m_ObjectHideFlags: 0
@@ -1170,15 +1172,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 921f0f74d8fa32d4181b24f5b9819f9f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerEyeCamera
-  shakeX:
-    min: 0.5
-    max: 1.5
-  shakeY:
-    min: 0.5
-    max: 1.5
-  shakeZ:
-    min: 0.2
-    max: 0.8
   startSpeed: 2
   waitTime: 1.5
   endSpeed: 0.2

@@ -12,6 +12,7 @@ public class PlayerInteractionController : MonoBehaviour
     private Coroutine _checkInteractionCoroutine;
     private IPassiveInteractable _passiveInteractable;
     private IActiveInteractable _activeInteractable;
+    private IGameObjectGetter _gameObjectGetter;
     
     
 
@@ -19,13 +20,21 @@ public class PlayerInteractionController : MonoBehaviour
     {
         while (true)
         {
+            //레이캐스트로 감지
             Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, interactionRange);
             var curPassiveInteractable = hit.collider?.GetComponent<IPassiveInteractable>();
+            //패시브 인터렉터블 교체
             if (_passiveInteractable != curPassiveInteractable)
             {
                 _passiveInteractable?.OnPassiveInteractExit();
                 _passiveInteractable = curPassiveInteractable;
                 _passiveInteractable?.OnPassiveInteract();
+            }
+            var curPlayerGetter = hit.collider?.GetComponent<IGameObjectGetter>();
+            if (_gameObjectGetter != curPlayerGetter)
+            {
+                _gameObjectGetter = curPlayerGetter;
+                _gameObjectGetter?.Get(gameObject);
             }
 
             var curActiveInteractable = hit.collider?.GetComponent<IActiveInteractable>();

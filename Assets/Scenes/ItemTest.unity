@@ -867,7 +867,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TestItem
   grabOffset: {x: 0, y: -0.3, z: 0.7}
-  player: {fileID: 252249137}
 --- !u!54 &762687801
 Rigidbody:
   m_ObjectHideFlags: 0
