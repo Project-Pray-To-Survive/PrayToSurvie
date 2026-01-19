@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class PlayerInteractionController : MonoBehaviour
 {
@@ -22,6 +23,7 @@ public class PlayerInteractionController : MonoBehaviour
         {
             //레이캐스트로 감지
             Physics.Raycast(transform.position, transform.forward, out RaycastHit hit, interactionRange);
+
             var curPassiveInteractable = hit.collider?.GetComponent<IPassiveInteractable>();
             //패시브 인터렉터블 교체
             if (_passiveInteractable != curPassiveInteractable)
@@ -34,7 +36,7 @@ public class PlayerInteractionController : MonoBehaviour
             if (_gameObjectGetter != curPlayerGetter)
             {
                 _gameObjectGetter = curPlayerGetter;
-                _gameObjectGetter?.Get(gameObject);
+                _gameObjectGetter?.Get(gameObject.transform.parent.gameObject);
             }
 
             var curActiveInteractable = hit.collider?.GetComponent<IActiveInteractable>();
