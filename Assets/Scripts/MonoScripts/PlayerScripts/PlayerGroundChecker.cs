@@ -3,14 +3,18 @@ using UnityEngine;
 
 public class PlayerGroundChecker : MonoBehaviour
 {
-    public event Action OnGroundEnter;
-    public event Action OnGroundExit;
+    private Hfsm _playerHfsm;
+
+    public void EmbedHfsm(Hfsm playerHfsm)
+    {
+        _playerHfsm = playerHfsm;
+    }
     
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Ground"))
         {
-            OnGroundEnter?.Invoke();
+            _playerHfsm.ChangeState("OnGround");
         }
     }
 
@@ -18,7 +22,7 @@ public class PlayerGroundChecker : MonoBehaviour
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Ground"))
         {
-            OnGroundExit?.Invoke();
+            _playerHfsm.ChangeState("OnAir");
         }
     }
 }

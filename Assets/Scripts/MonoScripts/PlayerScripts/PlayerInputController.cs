@@ -9,39 +9,34 @@ public class PlayerInputController : MonoBehaviour
     public event Action<Vector3,ForceMode> OnJump;
     public event Action OnInteract;
     public event Action<bool> OnSprint;
-    private IJumpState _jumpStateInterface;
-    private IMoveState _moveStateInterface;
+    
+    private Hfsm _playerHfsm;
     private Vector3 _moveDirection;
     private Coroutine _checkMoveCoroutine;
 
+    public void EmbedHfsm(Hfsm fsm)
+    {
+        _playerHfsm = fsm;
+    }
+    
     private IEnumerator CheckMoveFlow()
     {
         while (true)
         {
-            OnSprint?.Invoke(_moveStateInterface.IsMoving);
+            OnSprint?.Invoke(_playerHfsm.IsState("Walk"));
             yield return null;
         }
-    }
-
-    public void SetJumpStateInterface(IJumpState jumpStateInterface)
-    {
-        _jumpStateInterface = jumpStateInterface;
-    }
-
-    public void SetMoveStateInterface(IMoveState moveStateInterface)
-    {
-        _moveStateInterface = moveStateInterface;
     }
     
     public void Move(InputAction.CallbackContext context)
     {
         if (context.started)
         {
-            _moveStateInterface.StartMove();
+            _playerHfsm.ChangeState("Walk");
         }
         else if (context.canceled)
         {
-            _moveStateInterface.EndMove();
+            _playerHfsm.ChangeState("Idle");
         }
         var dir = context.ReadValue<Vector2>();
         var dir3 =new Vector3(dir.x, 0, dir.y); 
@@ -57,9 +52,10 @@ public class PlayerInputController : MonoBehaviour
 
     public void Jump(InputAction.CallbackContext context)
     {
-        if (context.started&&!_jumpStateInterface.IsJumping)
+        if (context.started&&_playerHfsm.IsState("OnGround"))
         {
             OnJump?.Invoke(Vector3.up,ForceMode.Impulse);
+            _playerHfsm.ChangeState("Air");
         }
     }
 

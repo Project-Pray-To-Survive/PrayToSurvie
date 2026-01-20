@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public abstract class EntityAnimator : MonoBehaviour
+public abstract class AEntityAnimator : MonoBehaviour
 {
     [SerializeField] private Animator ani;
 
