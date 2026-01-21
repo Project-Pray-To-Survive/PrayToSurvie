@@ -10,4 +10,9 @@ public abstract class AEntityAnimator : MonoBehaviour
     {
         aniState.SetState(ani);
     }
+
+    public void SetSpeed(float speed)
+    {
+        ani.speed = speed;
+    }
 }

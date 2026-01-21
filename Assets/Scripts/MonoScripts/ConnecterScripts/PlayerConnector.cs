@@ -10,6 +10,7 @@ public class PlayerConnector : MonoBehaviour, IConnector
     [SerializeField] private PlayerGroundChecker playerGroundChecker;
     
 
+    private PlayerInputBuffer _playerInputBuffer;
     private PlayerInputController _playerInputController;
     private PlayerMoveController _playerMoveController;
     private PlayerStatus _playerStatus;
@@ -20,6 +21,8 @@ public class PlayerConnector : MonoBehaviour, IConnector
 
     private void Start()
     {
+        _playerInputController = GetComponent<PlayerInputController>();
+        _playerInputBuffer = GetComponent<PlayerInputBuffer>();
         _playerStatus = GetComponent<PlayerStatus>();
         _playerMoveController = GetComponent<PlayerMoveController>();
         _playerInputController = GetComponent<PlayerInputController>();
@@ -48,6 +51,8 @@ public class PlayerConnector : MonoBehaviour, IConnector
         if(playerInteractionController == null) { Debug.LogError("PlayerInteractionController missing!"); return false; }
         if(_playerStatus == null) { Debug.LogError("PlayerStatus missing!"); return false; }
         if(_playerActionController == null) { Debug.LogError("PlayerActionController missing!"); return false; }
+        if(_playerMoveController == null) { Debug.LogError("PlayerMoveController missing!"); return false; }
+        if(_playerInputBuffer == null) { Debug.LogError("PlayerInputBuffer missing!"); return false; }
         
         if (_moverInterface == null) { Debug.LogError("IMover missing on this GameObject!"); return false; }
         if (_forcerInterface == null) { Debug.LogError("IForcer missing on this GameObject!"); return false; }
@@ -61,7 +66,9 @@ public class PlayerConnector : MonoBehaviour, IConnector
         hfsm.InitHfsm(gameObject);
         
         _playerInputController.EmbedHfsm(hfsm);
+        _playerInputController.SetPlayerInputBuffer(_playerInputBuffer);
         playerGroundChecker.EmbedHfsm(hfsm);
+        
         
         _playerActionController.PlayerSprintLogic.OnSprintStart += _playerActionController.PlayerStaminaLogic.StopReFill;
         _playerActionController.PlayerSprintLogic.OnSprintEnd+=_playerActionController.PlayerStaminaLogic.StartReFill;

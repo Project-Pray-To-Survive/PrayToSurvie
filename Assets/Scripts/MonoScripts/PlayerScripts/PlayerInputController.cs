@@ -11,6 +11,7 @@ public class PlayerInputController : MonoBehaviour
     public event Action<bool> OnSprint;
     
     private Hfsm _playerHfsm;
+    private PlayerInputBuffer _playerInputBuffer ;
     private Vector3 _moveDirection;
     private Coroutine _checkMoveCoroutine;
 
@@ -18,12 +19,17 @@ public class PlayerInputController : MonoBehaviour
     {
         _playerHfsm = fsm;
     }
-    
+
+    public void SetPlayerInputBuffer(PlayerInputBuffer playerInputBuffer)
+    {
+        _playerInputBuffer = playerInputBuffer;
+    }
+
     private IEnumerator CheckMoveFlow()
     {
         while (true)
         {
-            OnSprint?.Invoke(_playerHfsm.IsState("Walk"));
+            OnSprint?.Invoke(true);
             yield return null;
         }
     }
@@ -32,10 +38,12 @@ public class PlayerInputController : MonoBehaviour
     {
         if (context.started)
         {
+            _playerInputBuffer.SetFlag(PlayerInputFlags.Move,true);
             _playerHfsm.ChangeState("Walk");
         }
         else if (context.canceled)
         {
+            _playerInputBuffer.SetFlag(PlayerInputFlags.Move,false);
             _playerHfsm.ChangeState("Idle");
         }
         var dir = context.ReadValue<Vector2>();
@@ -63,6 +71,8 @@ public class PlayerInputController : MonoBehaviour
     {
         if (context.started)
         {
+            _playerInputBuffer.SetFlag(PlayerInputFlags.Sprint,true);
+            _playerHfsm.ChangeState("Run");
             if (_checkMoveCoroutine != null)
             {
                 StopCoroutine(_checkMoveCoroutine);
@@ -71,6 +81,8 @@ public class PlayerInputController : MonoBehaviour
         }
         else if (context.canceled)
         {
+            _playerInputBuffer.SetFlag(PlayerInputFlags.Sprint,false);
+            _playerHfsm.ChangeState("Idle");
             if (_checkMoveCoroutine != null)
             {
                 StopCoroutine(_checkMoveCoroutine);

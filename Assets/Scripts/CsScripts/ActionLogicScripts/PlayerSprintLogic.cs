@@ -7,9 +7,9 @@ public class PlayerSprintLogic
     public event Action OnSprintStart;
     public event Action OnMoveSpeedUpdate;
     public event Action OnSprintEnd;
+    public bool IsTiered { get; private set; } = false;
     private readonly PlayerStatus _playerStatus;
     private Coroutine _currentSprintCoroutine;
-    private bool _isTiered = false;
 
     public PlayerSprintLogic(PlayerStatus playerStatus)
     {
@@ -20,7 +20,7 @@ public class PlayerSprintLogic
     {
         if (input)
         {
-            if(_isTiered) return;
+            if(IsTiered) return;
             if (_currentSprintCoroutine != null) return;
             _currentSprintCoroutine = CoroutineManager.Instance.StartRoutine(SprintFlow());
         }
@@ -61,12 +61,12 @@ public class PlayerSprintLogic
 
     private IEnumerator TieredFlow()
     {
-        _isTiered = true;
+        IsTiered = true;
         while (_playerStatus.stamina.Value < (_playerStatus.staminaRegenRate.Value / 100 * _playerStatus.stamina.MaxValue))
         {
             yield return null;
         }
-        _isTiered = false;
+        IsTiered = false;
     }
     
 }

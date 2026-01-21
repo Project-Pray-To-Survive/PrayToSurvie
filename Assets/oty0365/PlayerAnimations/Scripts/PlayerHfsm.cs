@@ -13,6 +13,7 @@ public class PlayerHfsm : Hfsm
         _playerGroundFsm = new Fsm();
         _playerFsm.AddState("Walk", new PlayerWalkState(_parent,_playerFsm));
         _playerFsm.AddState("Idle", new PlayerIdleState(_parent, _playerFsm));
+        _playerFsm.AddState("Run", new PlayerRunState(_parent, _playerFsm));
         _playerGroundFsm.AddState("OnGround",new PlayerOnGroundState(_parent, _playerGroundFsm));
         _playerGroundFsm.AddState("OnAir",new PlayerOnAirState(_parent, _playerGroundFsm));
         _playerFsm.ChangeState("Idle");
@@ -21,11 +22,8 @@ public class PlayerHfsm : Hfsm
     public override void ChangeState(string stateName)
     {
         if (_playerFsm.HasState(stateName))
-        {
-            if (_playerGroundFsm.IsState("OnGround"))
-            {
-                _playerFsm.ChangeState(stateName);
-            }
+        { 
+            _playerFsm.ChangeState(stateName);
         }
         else if (_playerGroundFsm.HasState(stateName))
         {
