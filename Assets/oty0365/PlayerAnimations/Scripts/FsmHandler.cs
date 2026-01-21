@@ -3,9 +3,14 @@ using UnityEngine;
 
 public class FsmHandler : MonoBehaviour
 {
-    [SerializeField] private Hfsm hfsm;
+    private Hfsm _hfsm;
     private List<string> _cmdList = new List<string>();
     private HashSet<string> _cmdSet = new HashSet<string>();
+
+    public void EmbedHfsm(Hfsm hfsm)
+    {
+        _hfsm = hfsm;
+    }
     
     public void InsertToFsmQueue(string cmd)
     {
@@ -36,7 +41,7 @@ public class FsmHandler : MonoBehaviour
         _cmdList.Clear();
         _cmdSet.Clear();
 
-        hfsm.ChangeState(curState);
+        _hfsm.ChangeState(curState);
     }
     
 }

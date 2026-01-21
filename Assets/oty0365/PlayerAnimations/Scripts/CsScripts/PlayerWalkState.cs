@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class PlayerWalkState : AState
@@ -5,6 +6,8 @@ public class PlayerWalkState : AState
     private PlayerAnimator _playerAnimator;
     private PlayerInputBuffer _playerInputBuffer;
     private PlayerActionController _playerActionController;
+    private FsmHandler _fsmHandler;
+    private Coroutine _currentCheckCanRunCoroutine;
 
     public PlayerWalkState(GameObject parent, Fsm fsm) : base(parent, fsm){}
 
@@ -24,16 +27,37 @@ public class PlayerWalkState : AState
         {
             _playerActionController = _parent.GetComponent<PlayerActionController>();
         }
-        
-        _playerAnimator.SetAnimation(_playerAnimator.WalkAniState);
-        if (_playerInputBuffer.HasFlag(PlayerInputFlags.Sprint))
+
+        if (_fsmHandler == null)
         {
-            _fsm.ChangeState("Run");
+            _fsmHandler = _parent.GetComponent<FsmHandler>();
         }
+        _playerAnimator.SetAnimation(_playerAnimator.WalkAniState);
+        if (_currentCheckCanRunCoroutine != null)
+        {
+            CoroutineManager.Instance.StopCoroutine(_currentCheckCanRunCoroutine);
+        }
+        _currentCheckCanRunCoroutine = CoroutineManager.Instance.StartCoroutine(CheckCanRun());
     }
     
     public override void OnStateExit()
     {
-        
+        if (_currentCheckCanRunCoroutine == null) return;
+        CoroutineManager.Instance.StopCoroutine(_currentCheckCanRunCoroutine);
+        _currentCheckCanRunCoroutine = null;
+    }
+
+    private IEnumerator CheckCanRun()
+    {
+        while (true)
+        {
+            if (_playerInputBuffer.HasFlag(PlayerInputFlags.Sprint)&&!_playerActionController.PlayerSprintLogic.IsTiered)
+            {
+                _fsmHandler.InsertToFsmQueue("Run");
+                yield break;
+            }
+            yield return null;
+        }
+
     }
 }

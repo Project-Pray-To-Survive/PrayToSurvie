@@ -10,6 +10,7 @@ public class PlayerConnector : MonoBehaviour, IConnector
     [SerializeField] private PlayerGroundChecker playerGroundChecker;
     
 
+    private FsmHandler _fsmHandler;
     private PlayerInputBuffer _playerInputBuffer;
     private PlayerInputController _playerInputController;
     private PlayerMoveController _playerMoveController;
@@ -21,6 +22,7 @@ public class PlayerConnector : MonoBehaviour, IConnector
 
     private void Start()
     {
+        _fsmHandler = GetComponent<FsmHandler>();
         _playerInputController = GetComponent<PlayerInputController>();
         _playerInputBuffer = GetComponent<PlayerInputBuffer>();
         _playerStatus = GetComponent<PlayerStatus>();
@@ -53,6 +55,7 @@ public class PlayerConnector : MonoBehaviour, IConnector
         if(_playerActionController == null) { Debug.LogError("PlayerActionController missing!"); return false; }
         if(_playerMoveController == null) { Debug.LogError("PlayerMoveController missing!"); return false; }
         if(_playerInputBuffer == null) { Debug.LogError("PlayerInputBuffer missing!"); return false; }
+        if(_fsmHandler == null) { Debug.LogError("FsmHandler missing!"); return false; }
         
         if (_moverInterface == null) { Debug.LogError("IMover missing on this GameObject!"); return false; }
         if (_forcerInterface == null) { Debug.LogError("IForcer missing on this GameObject!"); return false; }
@@ -65,9 +68,10 @@ public class PlayerConnector : MonoBehaviour, IConnector
         PlayerHfsm hfsm = new PlayerHfsm();
         hfsm.InitHfsm(gameObject);
         
-        _playerInputController.EmbedHfsm(hfsm);
+        _fsmHandler.EmbedHfsm(hfsm);
+        _playerInputController.EmbedHfsm(_fsmHandler,hfsm);
         _playerInputController.SetPlayerInputBuffer(_playerInputBuffer);
-        playerGroundChecker.EmbedHfsm(hfsm);
+        playerGroundChecker.EmbedHfsm(_fsmHandler);
         
         
         _playerActionController.PlayerSprintLogic.OnSprintStart += _playerActionController.PlayerStaminaLogic.StopReFill;

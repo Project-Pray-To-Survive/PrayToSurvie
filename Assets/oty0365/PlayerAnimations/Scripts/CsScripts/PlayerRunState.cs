@@ -6,6 +6,7 @@ public class PlayerRunState : AState
     private PlayerAnimator _playerAnimator;
     private PlayerInputBuffer _playerInputBuffer;
     private PlayerStatus _playerStatus;
+    private FsmHandler _fsmHandler;
     PlayerActionController _playerActionController;
     private Coroutine _currentCheckCanWalkCoroutine;
 
@@ -38,13 +39,17 @@ public class PlayerRunState : AState
         {
             _playerActionController = _parent.GetComponent<PlayerActionController>();
         }
-        
+
+        if (_fsmHandler == null)
+        {
+            _fsmHandler = _parent.GetComponent<FsmHandler>();
+        }
         _currentCheckCanWalkCoroutine = CoroutineManager.Instance.StartCoroutine(CheckCanWalkFlow());
         _playerAnimator.SetAnimation(_playerAnimator.WalkAniState);
         _playerAnimator.SetSpeed(2);
         if (!_playerInputBuffer.HasFlag(PlayerInputFlags.Move))
         {
-            _fsm.ChangeState("Idle");
+            _fsmHandler.InsertToFsmQueue("Idle");
         }
 
     }
@@ -65,7 +70,7 @@ public class PlayerRunState : AState
         {
             yield return null;
         }
-        _fsm.ChangeState("Walk");
+        _fsmHandler.InsertToFsmQueue("Walk");
     }
     
 }

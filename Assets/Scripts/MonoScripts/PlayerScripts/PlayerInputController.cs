@@ -10,14 +10,16 @@ public class PlayerInputController : MonoBehaviour
     public event Action OnInteract;
     public event Action<bool> OnSprint;
     
+    private FsmHandler _fsmHandler;
     private Hfsm _playerHfsm;
     private PlayerInputBuffer _playerInputBuffer ;
     private Vector3 _moveDirection;
     private Coroutine _checkMoveCoroutine;
 
-    public void EmbedHfsm(Hfsm fsm)
+    public void EmbedHfsm(FsmHandler fsmHandler,Hfsm playerHfsm)
     {
-        _playerHfsm = fsm;
+        _playerHfsm = playerHfsm;
+        _fsmHandler = fsmHandler;
     }
 
     public void SetPlayerInputBuffer(PlayerInputBuffer playerInputBuffer)
@@ -39,12 +41,12 @@ public class PlayerInputController : MonoBehaviour
         if (context.started)
         {
             _playerInputBuffer.SetFlag(PlayerInputFlags.Move,true);
-            _playerHfsm.ChangeState("Walk");
+            _fsmHandler.InsertToFsmQueue("Walk");
         }
         else if (context.canceled)
         {
             _playerInputBuffer.SetFlag(PlayerInputFlags.Move,false);
-            _playerHfsm.ChangeState("Idle");
+            _fsmHandler.InsertToFsmQueue("Idle");
         }
         var dir = context.ReadValue<Vector2>();
         var dir3 =new Vector3(dir.x, 0, dir.y); 
