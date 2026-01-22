@@ -4,30 +4,32 @@ using UnityEngine.Serialization;
 public class PlayerConnector : MonoBehaviour, IConnector
 {
     [Header("Controllers")]
+    //[SerializeField] private PlayerAnimator playerAnimator;
     [SerializeField] private MouseController mouseController;
     [SerializeField] private PlayerInteractionController playerInteractionController;
     [SerializeField] private PlayerGroundChecker playerGroundChecker;
     
 
+    private FsmHandler _fsmHandler;
+    private PlayerInputBuffer _playerInputBuffer;
     private PlayerInputController _playerInputController;
     private PlayerMoveController _playerMoveController;
     private PlayerStatus _playerStatus;
     private PlayerActionController _playerActionController;
-
-    private IJumpState _jumpStateInterface;
-    private IMoveState _moveStateInterface;
+    
     private IMover _moverInterface;
     private IForcer _forcerInterface;
 
     private void Start()
     {
+        _fsmHandler = GetComponent<FsmHandler>();
+        _playerInputController = GetComponent<PlayerInputController>();
+        _playerInputBuffer = GetComponent<PlayerInputBuffer>();
         _playerStatus = GetComponent<PlayerStatus>();
         _playerMoveController = GetComponent<PlayerMoveController>();
         _playerInputController = GetComponent<PlayerInputController>();
         _playerActionController = GetComponent<PlayerActionController>();
         
-        _jumpStateInterface = GetComponent<IJumpState>();
-        _moveStateInterface = GetComponent<IMoveState>();
         _moverInterface = GetComponent<IMover>();
         _forcerInterface = GetComponent<IForcer>();
         
@@ -38,8 +40,6 @@ public class PlayerConnector : MonoBehaviour, IConnector
         _playerActionController.InitializeStamina(_playerStatus);
         mouseController.SetCamera(Camera.main);
         mouseController.SetPlayer(gameObject);
-        _playerInputController.SetJumpStateInterface(_jumpStateInterface);
-        _playerInputController.SetMoveStateInterface(_moveStateInterface);
         OnConnect();
         
     }
@@ -53,9 +53,10 @@ public class PlayerConnector : MonoBehaviour, IConnector
         if(playerInteractionController == null) { Debug.LogError("PlayerInteractionController missing!"); return false; }
         if(_playerStatus == null) { Debug.LogError("PlayerStatus missing!"); return false; }
         if(_playerActionController == null) { Debug.LogError("PlayerActionController missing!"); return false; }
+        if(_playerMoveController == null) { Debug.LogError("PlayerMoveController missing!"); return false; }
+        if(_playerInputBuffer == null) { Debug.LogError("PlayerInputBuffer missing!"); return false; }
+        if(_fsmHandler == null) { Debug.LogError("FsmHandler missing!"); return false; }
         
-        if (_jumpStateInterface == null) { Debug.LogError("IJumpState missing on this GameObject!"); return false; }
-        if(_moveStateInterface == null) { Debug.LogError("IMoveState missing on this GameObject!"); return false; }
         if (_moverInterface == null) { Debug.LogError("IMover missing on this GameObject!"); return false; }
         if (_forcerInterface == null) { Debug.LogError("IForcer missing on this GameObject!"); return false; }
 
@@ -64,26 +65,29 @@ public class PlayerConnector : MonoBehaviour, IConnector
 
     public void OnConnect()
     {
-        playerGroundChecker.OnGroundEnter += _jumpStateInterface.EndJump;
-        playerGroundChecker.OnGroundExit += _jumpStateInterface.StartJump;
-        _playerInputController.OnSprint+=_playerActionController.PlayerSprintLogic.OnSprint;
+        PlayerHfsm hfsm = new PlayerHfsm();
+        hfsm.InitHfsm(gameObject);
+        
+        _fsmHandler.EmbedHfsm(hfsm);
+        _playerInputController.EmbedHfsm(_fsmHandler,hfsm);
+        _playerInputController.SetPlayerInputBuffer(_playerInputBuffer);
+        playerGroundChecker.EmbedHfsm(_fsmHandler);
+        
+        
         _playerActionController.PlayerSprintLogic.OnSprintStart += _playerActionController.PlayerStaminaLogic.StopReFill;
         _playerActionController.PlayerSprintLogic.OnSprintEnd+=_playerActionController.PlayerStaminaLogic.StartReFill;
         _playerActionController.PlayerSprintLogic.OnMoveSpeedUpdate+=_playerInputController.UpdateMove;
+        
+        _playerInputController.OnSprint+=_playerActionController.PlayerSprintLogic.OnSprint;
         _playerInputController.OnInteract += playerInteractionController.StartInteraction;
         _playerInputController.OnMove += _moverInterface.SetVelocity;
         _playerInputController.OnJump += _forcerInterface.SetAddForce;
+        
         mouseController.OnMouseMove += _playerInputController.UpdateMove;
     }
 
     public void OnDisconnect()
     {
-        if (playerGroundChecker != null && _jumpStateInterface != null)
-        {
-            playerGroundChecker.OnGroundEnter -= _jumpStateInterface.EndJump;
-            playerGroundChecker.OnGroundExit -= _jumpStateInterface.StartJump;
-        }
-
         if (_playerInputController != null)
         {
             if (_moverInterface != null)

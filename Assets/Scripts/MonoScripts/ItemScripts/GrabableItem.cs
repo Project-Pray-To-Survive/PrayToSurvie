@@ -4,22 +4,18 @@ using UnityEngine;
 public class GrabableItem : ItemObject, IActiveInteractable,IGameObjectGetter
 {
     [SerializeField] private Vector3 grabOffset = new(0, 0, 1.5f);
+    [SerializeField] private Transform rightHandTransform;
+    [SerializeField] private Transform leftHandTransform;
+    [SerializeField] private Rigidbody _rigidbody;
+    
+    private PlayerHand _playerInventory;
     private Transform _holdPosition;
     private bool _isGrabbed;
-    private GameObject _holdingPlayer;
-    private Rigidbody _rigidbody;
-
+    public bool IsGrabbed=>_isGrabbed;
+    public Transform RightHandTransform => rightHandTransform;
+    public Transform LeftHandTransform => leftHandTransform;
+    public Vector3 GrabbOffset => grabOffset;
     public event Action OnActiveInteractExit;
-
-    private void Awake()
-    {
-        _rigidbody = GetComponent<Rigidbody>();
-    }
-
-    public void Get(GameObject obj)
-    {
-        _holdingPlayer = obj;
-    }
 
     public void OnActiveInteract()
     {
@@ -32,33 +28,27 @@ public class GrabableItem : ItemObject, IActiveInteractable,IGameObjectGetter
             Drop();
         }
     }
-
-    private void Grab()
+    public virtual void Get(GameObject obj)
     {
-        if (_holdingPlayer == null) return;
-        _holdPosition = _holdingPlayer.transform;
-        _isGrabbed = true;
-        if (_rigidbody != null)
-        {
-            _rigidbody.isKinematic = true;
-            _rigidbody.useGravity = false;
-        }
-        
-        transform.SetParent(_holdPosition);
-        transform.localPosition = grabOffset;
-        transform.localRotation = Quaternion.identity;
+        _playerInventory = obj.GetComponent<PlayerHand>();
+        _playerInventory?.Observe(this);
     }
 
-    private void Drop()
+    protected virtual void Grab()
     {
+        _isGrabbed = true;
+        _playerInventory?.Put();
+        _rigidbody.isKinematic = true;
+        _rigidbody.useGravity = false;
+        
+    }
+
+    protected virtual void Drop()
+    {  
+        _playerInventory?.Release();
+        _rigidbody.isKinematic = false;
+        _rigidbody.useGravity = true;
         _isGrabbed = false;
-        transform.SetParent(null);
-        _holdPosition = null;
-        if (_rigidbody != null)
-        {
-            _rigidbody.isKinematic = false;
-            _rigidbody.useGravity = true;
-        }
         OnActiveInteractExit?.Invoke();
     }
 }

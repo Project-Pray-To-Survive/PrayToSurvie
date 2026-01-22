@@ -1,24 +1,33 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class PlayerGroundChecker : MonoBehaviour
 {
-    public event Action OnGroundEnter;
-    public event Action OnGroundExit;
+    private FsmHandler _fsmHandler;
+    private bool _onGround = true;
     
-    private void OnTriggerEnter(Collider other)
+    public void EmbedHfsm(FsmHandler fsmHandler)
     {
-        if (other.gameObject.layer == LayerMask.NameToLayer("Ground"))
-        {
-            OnGroundEnter?.Invoke();
-        }
+        _fsmHandler = fsmHandler;
     }
 
-    private void OnTriggerExit(Collider other)
+    private void Update()
     {
-        if (other.gameObject.layer == LayerMask.NameToLayer("Ground"))
+        if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 0.1f,
+                LayerMask.GetMask("Ground")))
         {
-            OnGroundExit?.Invoke();
+            if (_onGround) return;
+            _onGround = true;
+            _fsmHandler.InsertToFsmQueue("OnGround");
+
         }
+        else
+        {
+            if (!_onGround) return;
+            _onGround = false;
+            _fsmHandler.InsertToFsmQueue("OnAir");
+        }
+
     }
 }

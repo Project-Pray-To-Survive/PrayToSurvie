@@ -9,39 +9,44 @@ public class PlayerInputController : MonoBehaviour
     public event Action<Vector3,ForceMode> OnJump;
     public event Action OnInteract;
     public event Action<bool> OnSprint;
-    private IJumpState _jumpStateInterface;
-    private IMoveState _moveStateInterface;
+    
+    private FsmHandler _fsmHandler;
+    private Hfsm _playerHfsm;
+    private PlayerInputBuffer _playerInputBuffer ;
     private Vector3 _moveDirection;
     private Coroutine _checkMoveCoroutine;
+
+    public void EmbedHfsm(FsmHandler fsmHandler,Hfsm playerHfsm)
+    {
+        _playerHfsm = playerHfsm;
+        _fsmHandler = fsmHandler;
+    }
+
+    public void SetPlayerInputBuffer(PlayerInputBuffer playerInputBuffer)
+    {
+        _playerInputBuffer = playerInputBuffer;
+    }
 
     private IEnumerator CheckMoveFlow()
     {
         while (true)
         {
-            OnSprint?.Invoke(_moveStateInterface.IsMoving);
+            OnSprint?.Invoke(true);
             yield return null;
         }
-    }
-
-    public void SetJumpStateInterface(IJumpState jumpStateInterface)
-    {
-        _jumpStateInterface = jumpStateInterface;
-    }
-
-    public void SetMoveStateInterface(IMoveState moveStateInterface)
-    {
-        _moveStateInterface = moveStateInterface;
     }
     
     public void Move(InputAction.CallbackContext context)
     {
         if (context.started)
         {
-            _moveStateInterface.StartMove();
+            _playerInputBuffer.SetFlag(PlayerInputFlags.Move,true);
+            _fsmHandler.InsertToFsmQueue("Walk");
         }
         else if (context.canceled)
         {
-            _moveStateInterface.EndMove();
+            _playerInputBuffer.SetFlag(PlayerInputFlags.Move,false);
+            _fsmHandler.InsertToFsmQueue("Idle");
         }
         var dir = context.ReadValue<Vector2>();
         var dir3 =new Vector3(dir.x, 0, dir.y); 
@@ -57,16 +62,16 @@ public class PlayerInputController : MonoBehaviour
 
     public void Jump(InputAction.CallbackContext context)
     {
-        if (context.started&&!_jumpStateInterface.IsJumping)
-        {
-            OnJump?.Invoke(Vector3.up,ForceMode.Impulse);
-        }
+        if (!context.started || !_playerHfsm.IsState("OnGround")) return;
+        OnJump?.Invoke(Vector3.up,ForceMode.Impulse);
     }
 
     public void Sprint(InputAction.CallbackContext context)
     {
         if (context.started)
         {
+            _playerInputBuffer.SetFlag(PlayerInputFlags.Sprint,true);
+            _playerHfsm.ChangeState("Run");
             if (_checkMoveCoroutine != null)
             {
                 StopCoroutine(_checkMoveCoroutine);
@@ -75,6 +80,8 @@ public class PlayerInputController : MonoBehaviour
         }
         else if (context.canceled)
         {
+            _playerInputBuffer.SetFlag(PlayerInputFlags.Sprint,false);
+            _playerHfsm.ChangeState("Idle");
             if (_checkMoveCoroutine != null)
             {
                 StopCoroutine(_checkMoveCoroutine);
