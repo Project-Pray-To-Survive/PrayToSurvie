@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 
-public class PlayerProceduralAnimaiton : MonoBehaviour
+public class PlayerProceduralAnimation : MonoBehaviour
 {
     [SerializeField] private Rig leftAnimatedArmRig;
     [SerializeField] private Rig rightAnimatedArmRig;
