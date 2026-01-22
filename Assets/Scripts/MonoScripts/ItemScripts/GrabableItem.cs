@@ -4,6 +4,8 @@ using UnityEngine;
 public class GrabableItem : ItemObject, IActiveInteractable,IGameObjectGetter
 {
     [SerializeField] private Vector3 grabOffset = new(0, 0, 1.5f);
+    [SerializeField] private Transform rightHandTransform;
+    [SerializeField] private Transform leftHandTransform;
     private Transform _holdPosition;
     private bool _isGrabbed;
     private GameObject _holdingPlayer;
@@ -43,6 +45,10 @@ public class GrabableItem : ItemObject, IActiveInteractable,IGameObjectGetter
             _rigidbody.isKinematic = true;
             _rigidbody.useGravity = false;
         }
+
+        var ppa = _holdingPlayer.GetComponent<PlayerProceduralAnimaiton>();
+        ppa.SetLeftArmTarget(leftHandTransform);
+        ppa.SetRightArmTarget(rightHandTransform);
         
         transform.SetParent(_holdPosition);
         transform.localPosition = grabOffset;
@@ -50,7 +56,10 @@ public class GrabableItem : ItemObject, IActiveInteractable,IGameObjectGetter
     }
 
     private void Drop()
-    {
+    {   
+        var ppa = _holdingPlayer.GetComponent<PlayerProceduralAnimaiton>();
+        ppa.FreeLeftArmTarget();
+        ppa.FreeRightArmTarget();
         _isGrabbed = false;
         transform.SetParent(null);
         _holdPosition = null;

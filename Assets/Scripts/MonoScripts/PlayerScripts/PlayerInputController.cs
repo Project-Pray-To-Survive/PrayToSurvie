@@ -62,11 +62,8 @@ public class PlayerInputController : MonoBehaviour
 
     public void Jump(InputAction.CallbackContext context)
     {
-        if (context.started&&_playerHfsm.IsState("OnGround"))
-        {
-            OnJump?.Invoke(Vector3.up,ForceMode.Impulse);
-            _playerHfsm.ChangeState("Air");
-        }
+        if (!context.started || !_playerHfsm.IsState("OnGround")) return;
+        OnJump?.Invoke(Vector3.up,ForceMode.Impulse);
     }
 
     public void Sprint(InputAction.CallbackContext context)
