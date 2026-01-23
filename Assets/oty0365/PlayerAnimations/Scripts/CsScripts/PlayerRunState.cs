@@ -51,6 +51,10 @@ public class PlayerRunState : AState
         {
             _fsmHandler.InsertToFsmQueue("Idle");
         }
+        else if(_playerStatus.stamina.Value > _playerStatus.stamina.MinValue)
+        {
+            _fsmHandler.InsertToFsmQueue("Walk");
+        }
 
     }
     

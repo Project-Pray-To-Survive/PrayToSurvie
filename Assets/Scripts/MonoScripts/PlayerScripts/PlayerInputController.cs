@@ -31,7 +31,10 @@ public class PlayerInputController : MonoBehaviour
     {
         while (true)
         {
-            OnSprint?.Invoke(true);
+            if (_playerInputBuffer.HasFlag(PlayerInputFlags.Move))
+            {
+                OnSprint?.Invoke(true);
+            }
             yield return null;
         }
     }
