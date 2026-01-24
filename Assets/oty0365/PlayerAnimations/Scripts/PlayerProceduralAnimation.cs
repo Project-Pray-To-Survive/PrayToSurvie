@@ -13,14 +13,13 @@ public class PlayerProceduralAnimation : MonoBehaviour
     private Transform _leftArmTransform;
     private Transform _rightArmTransform;
     
-
     public void SetLeftArmTarget(Transform lat)
     {
         leftAnimatedArmRig.weight = 0;
         leftArmRig.weight = 1;
         _leftArmTransform = lat;
     }
-    
+
     public void SetRightArmTarget(Transform rat)
     {
         rightAnimatedArmRig.weight = 0;
@@ -44,8 +43,10 @@ public class PlayerProceduralAnimation : MonoBehaviour
     
     private void LateUpdate()
     {
-        if (_leftArmTransform == null || _rightArmTransform == null) return;
-        leftArmTarget.position = _leftArmTransform.position;
-        rightArmTarget.position = _rightArmTransform.position;
+        if (_leftArmTransform != null)
+            leftArmTarget.position = _leftArmTransform.position;
+
+        if (_rightArmTransform != null)
+            rightArmTarget.position = _rightArmTransform.position;
     }
 }

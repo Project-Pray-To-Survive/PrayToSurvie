@@ -12,7 +12,6 @@ public class PlayerHand : MonoBehaviour
 
     public void Put()
     {
-        
         _playerProceduralAnimation = gameObject.GetComponent<PlayerProceduralAnimation>();
         _playerProceduralAnimation.SetLeftArmTarget(_currentItem.LeftHandTransform);
         _playerProceduralAnimation.SetRightArmTarget(_currentItem.RightHandTransform);
